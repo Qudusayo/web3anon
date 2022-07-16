@@ -13,35 +13,45 @@ export function ContractProvider({ children }) {
   const { fetch } = useMoralisWeb3ApiCall(native.runContractFunction);
 
   const getUserWithAddress = async (address) => {
-    let result = await fetch({
-      params: {
-        abi,
-        chain: supportedChain,
-        address: contractAddress,
-        function_name: "getUsernameWithAddress",
+    try {
+      let result = await fetch({
         params: {
-          _address: address,
+          abi,
+          chain: supportedChain,
+          address: contractAddress,
+          function_name: "getUsernameWithAddress",
+          params: {
+            _address: address,
+          },
         },
-      },
-    });
-    // console.log(result);
-    return result;
+      });
+      return result;
+    } catch (error) {
+      console.log(error);
+      return "";
+    }
   };
 
   const getAddressForUser = async (username) => {
-    let result = await fetch({
-      params: {
-        abi,
-        chain: supportedChain,
-        address: contractAddress,
-        function_name: "getAddressWithUsername",
+    const deadAddress = "0x0000000000000000000000000000000000000000";
+    try {
+      let result = await fetch({
         params: {
-          _username: username,
+          abi,
+          chain: supportedChain,
+          address: contractAddress,
+          function_name: "getAddressWithUsername",
+          params: {
+            _username: username,
+          },
         },
-      },
-    });
-    console.log(result);
-    return result;
+      });
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return deadAddress;
+    }
   };
 
   let sharedState = {
