@@ -1,13 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.scss";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { MoralisProvider } from "react-moralis";
+import { BrowserRouter } from "react-router-dom";
+import { ContractProvider } from "./Context/ContractContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <MoralisProvider
+      appId={process.env.REACT_APP_MORALIS_APPID}
+      serverUrl={process.env.REACT_APP_MORALIS_SERVER_URL}
+    >
+      <BrowserRouter>
+        <ContractProvider>
+          <App />
+        </ContractProvider>
+      </BrowserRouter>
+    </MoralisProvider>
   </React.StrictMode>
 );
 
