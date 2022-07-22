@@ -47,7 +47,7 @@ export function ContractProvider({ children }) {
         },
       });
       console.log(result);
-      return result;
+      return !!result ? result : deadAddress;
     } catch (error) {
       console.log(error);
       return deadAddress;

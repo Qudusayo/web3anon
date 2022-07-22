@@ -1,0 +1,25 @@
+.Footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid #dfdfdf;
+  padding: 1em 0 5em;
+  top: 98vh;
+
+  span,
+  a {
+    display: block;
+    margin: .5em 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  @media screen and (max-width: 700px) {
+    position: static;
+    padding-bottom: 1em;
+  }
+}

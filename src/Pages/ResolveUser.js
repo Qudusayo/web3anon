@@ -6,13 +6,16 @@ import { useContractContext } from "./../Context/ContractContext";
 
 import Error404 from "./Error404/Error404";
 import Message from "./Message/Message";
-import { Loading } from "web3uikit";
+import { useMoralis } from "react-moralis";
+import Footer from "../Component/Footer/Footer";
 
 const deadAddress = "0x0000000000000000000000000000000000000000";
 
 function ResolveUser() {
+  const { isInitialized } = useMoralis();
   const [resolvedUsername, setResolvedUsername] = useState("");
   const [isValidUsername, setIsValidUsername] = useState(false);
+  const [resolved, setResolved] = useState(false);
   const [resolving, setResolving] = useState(true);
   const { getAddressForUser } = useContractContext();
 
@@ -30,30 +33,39 @@ function ResolveUser() {
       } else {
         setIsValidUsername(true);
       }
-      
+
+      setResolved(true);
       setResolving(false);
     }
 
-    verifyUsername();
-  }, []);
+    isInitialized && verifyUsername();
+  }, [isInitialized]);
 
   return (
     <>
-      {resolving ? (
-        <div>
-          <h2>Loading</h2>
-          <h2>Loading</h2>
-          <h2>Loading</h2>
+      {resolving && !resolved ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100vw",
+            height: "100vh",
+          }}
+        >
+          <h2>Loading!!!</h2>
         </div>
       ) : (
         <>
           <div>
-            {isValidUsername && !resolving ? (
-              <Message username={resolvedUsername} />
+            {isValidUsername ? (
+              <>
+                <Message username={resolvedUsername} />
+                <Footer />
+              </>
             ) : null}
-            {!isValidUsername && !resolving ? (
-              <Error404 username={resolvedUsername} />
-            ) : null}
+            {!isValidUsername ? <Error404 username={resolvedUsername} /> : null}
           </div>
         </>
       )}

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import Home from "./Pages/Home/Home";
 import { useContractContext } from "./Context/ContractContext";
-import console from "console-browserify";
 import { Route, Routes } from "react-router-dom";
 import ResolveUser from "./Pages/ResolveUser";
 

@@ -14,11 +14,6 @@ contract Handler is StringToLower, UTF8StringLength {
     // Emits a User Createtion event
     event UserCreated(address indexed owner, string username);
 
-    constructor() {
-        usernameByAddress[msg.sender] = "qudusayo";
-        addressByUsername["qudusayo"] = msg.sender;
-    }
-
     // Only Existing User modifier
     modifier _OnlyExistingUser(string memory _username) {
         require(

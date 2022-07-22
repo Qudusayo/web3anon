@@ -1,21 +1,77 @@
 import { useState } from "react";
 import styles from "./Message.module.scss";
 import console from "console-browserify";
+import Swal from "sweetalert2";
 
 import Spinner from "./../../Component/Spinner/Spinner";
+import { useMoralisCloudFunction } from "react-moralis";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+});
 
 function Message({ username }) {
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const { fetch } = useMoralisCloudFunction(
+    "message",
+    {},
+    { autoFetch: false }
+  );
 
   const setMessageHandler = (e) => {
     setMessage(e.target.value);
   };
 
+  const fire = (truthy) =>
+    truthy
+      ? Toast.fire({
+          icon: "success",
+          title: "Message sent successfully",
+        })
+      : Toast.fire({
+          icon: "error",
+          title: "Error sending message",
+        });
+
   const submitFormHandler = async (e) => {
     e.preventDefault();
+    if (message.length < 10) {
+      return Swal.fire({
+        icon: "warning",
+        text: `Please lengthen the text to 10 characters or more. (You currently using ${message.length} characters)`,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }
     setIsSending(true);
-    console.log(message);
+
+    const params = {
+      username,
+      message,
+    };
+    try {
+      const response = await fetch({
+        params,
+      });
+      if (response.status) {
+        setMessage("");
+        fire(true);
+      } else {
+        fire(false);
+      }
+    } catch (error) {
+      const code = error.code;
+      const message = error.message;
+      fire(false);
+      console.log(code, message, error);
+    }
+    setIsSending(false);
   };
 
   const transformUsername = (username) =>
